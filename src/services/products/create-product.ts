@@ -1,13 +1,7 @@
 import ProductRepository from "@/repositories/ProductRepository";
+import { IProduct } from "@/types/product";
 
-export interface CreateProductData {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-}
-
-export const createProductService = async (data: CreateProductData) => {
+export async function createProductService(data: IProduct) {
   // Validate Required Fields
   if (!data.name || !data.description || data.price === undefined || data.stock === undefined) {
     return {
@@ -17,7 +11,7 @@ export const createProductService = async (data: CreateProductData) => {
   }
 
   // Validate price and stock if negative numbers
-  if (data.price < 0 || data.stock < 0) {
+  if (data.price < 1 || data.stock < 1) {
     return {
       status: "error",
       message: "Price and stock must be positive numbers."

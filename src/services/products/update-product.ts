@@ -1,7 +1,8 @@
 import ProductRepository from "@/repositories/ProductRepository";
-import { IProduct } from "@/types/product";
+import { ProductData } from "@/types/product";
 
-export async function updateProductService(id: string, data: IProduct) {
+// Update Products
+export async function updateProductService(id: string, data: ProductData) {
   // Check if id is provided
   if (!id) {
     return {
@@ -34,5 +35,42 @@ export async function updateProductService(id: string, data: IProduct) {
     status: "success",
     message: "Updated Product Successfully!",
     data: result
+  }
+}
+
+// Restore Product
+export async function restoreProductService(id: string) {
+  // Check if ID is provided
+  if (!id) {
+    return {
+      status: "error",
+      message: "Product ID is missing!"
+    }
+  }
+
+  // Check if Product ID is exist
+  const existProduct = await ProductRepository.findById(id);
+  if (!existProduct) {
+    return {
+      status: "error",
+      message: "Product Not Found!"
+    }
+  }
+
+  // Check if deactivated product
+  if (existProduct.isActive) {
+    return {
+      status: "error",
+      message: "Product is already activated!"
+    }
+  }
+
+  // Activate Product
+  await ProductRepository.restore(id);
+
+  return {
+    status: "success",
+    message: `Activated Product ID: ${id}`,
+    data: null
   }
 }

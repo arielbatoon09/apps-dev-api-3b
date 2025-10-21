@@ -1,10 +1,19 @@
 import { Request, Response } from "express";
-import { createProductService, productListService, updateProductService, deleteProductService, getActiveProductsService, softdeleteProductService, restoreProductService } from "@/services/products";
+import { 
+  createProductService, 
+  getAllProductsService, 
+  updateProductService, 
+  deleteProductService, 
+  getActiveProductsService, 
+  softdeleteProductService, 
+  restoreProductService,
+  getProductByIdService
+} from "@/services/products";
 
 class ProductController {
   // Product List regardless if is Active or Not
-  async productList(req: Request, res: Response) {
-    const result = await productListService();
+  async getAllProducts(req: Request, res: Response) {
+    const result = await getAllProductsService();
 
     return res.status(200).json(result);
   }
@@ -14,6 +23,18 @@ class ProductController {
     const result = await getActiveProductsService();
 
     return res.status(200).json(result);
+  }
+
+  // Get Product by ID
+  async getProductById(req: Request, res: Response) {
+    const { id } = req.body;
+
+    const result = await getProductByIdService(id);
+    
+    if (result.status === "error") {
+      return res.status(400).json(result);
+    }
+    return res.status(201).json(result);
   }
 
   // Product Create

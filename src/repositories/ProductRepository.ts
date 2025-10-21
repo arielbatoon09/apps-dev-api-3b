@@ -1,10 +1,10 @@
-import { IProduct } from "@/types/product";
+import { ProductData } from "@/types/product";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 class ProductRepository {
-  async create(data: IProduct) {
+  async create(data: ProductData) {
     return prisma.product.create({ data });
   }
   
@@ -21,7 +21,7 @@ class ProductRepository {
     return prisma.product.findFirst({ where: { id } });
   }
 
-  async update(id: string, data: Partial<{ name: string, description: string, stock: number, price: number }>) {
+  async update(id: string, data: Partial<ProductData>) {
     return prisma.product.update({ where: { id }, data });
   }
 
